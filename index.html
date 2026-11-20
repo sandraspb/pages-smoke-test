@@ -1642,6 +1642,11 @@ function exportHtml(){const cloned=document.documentElement.cloneNode(true);cons
 function captureSelection(){if(!editing)return;const sel=window.getSelection();if(!sel||sel.rangeCount<1||sel.isCollapsed){selectionAction.classList.remove('visible');return}const range=sel.getRangeAt(0);if(!article.contains(range.commonAncestorContainer)||!range.toString().trim()||range.startContainer!==range.endContainer||range.startContainer.nodeType!==Node.TEXT_NODE||range.startContainer.parentElement.closest('.term')){selectionAction.classList.remove('visible');return}selectedRange=range.cloneRange();selectedText=range.toString().trim();const rect=range.getBoundingClientRect();selectionAction.style.left=Math.max(12,Math.min(innerWidth-150,rect.left))+'px';selectionAction.style.top=Math.min(innerHeight-55,Math.max(74,rect.top-42))+'px';selectionAction.textContent=bindingMode?(bindingMode==='move'?'↪ Перенести сюда':'＋ Привязать сюда'):'＋ Карточка';selectionAction.classList.add('visible')}
 
 article.addEventListener('mouseup',()=>setTimeout(captureSelection,0));article.addEventListener('touchend',()=>setTimeout(captureSelection,150));article.addEventListener('keyup',e=>{if(e.shiftKey)setTimeout(captureSelection,0)});
+article.addEventListener('click',e=>{
+ if(editing||reviewMode||!rightOpen||!e.target.closest('.book-p'))return;
+ if(e.target.closest('button,a,input,select,textarea,audio,[data-open],[data-media-open]'))return;
+ sideClose();
+});
 document.getElementById('editor-toggle').onclick=()=>{if(reviewMode)reviewSwitch(false);editorSwitch(!editing)};
 selectionAction.addEventListener('click',()=>{if(bindingMode)finishBinding();else newCard(true)});
 document.addEventListener('click',e=>{
