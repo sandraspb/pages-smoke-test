@@ -1643,8 +1643,10 @@ function captureSelection(){if(!editing)return;const sel=window.getSelection();i
 
 article.addEventListener('mouseup',()=>setTimeout(captureSelection,0));article.addEventListener('touchend',()=>setTimeout(captureSelection,150));article.addEventListener('keyup',e=>{if(e.shiftKey)setTimeout(captureSelection,0)});
 article.addEventListener('click',e=>{
- if(editing||reviewMode||!rightOpen||!e.target.closest('.book-p'))return;
+ if(editing||reviewMode||!rightOpen)return;
  if(e.target.closest('button,a,input,select,textarea,audio,[data-open],[data-media-open]'))return;
+ const selection=window.getSelection();
+ if(selection&&!selection.isCollapsed&&selection.toString().trim())return;
  sideClose();
 });
 document.getElementById('editor-toggle').onclick=()=>{if(reviewMode)reviewSwitch(false);editorSwitch(!editing)};
